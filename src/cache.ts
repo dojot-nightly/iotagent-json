@@ -16,7 +16,7 @@ interface DeviceManagerEventData {
  */
 interface DeviceManagerEvent {
   // Event type. Self-explanatory.
-  event: "create" | "remove" | "update" | "configure";
+  event: "create" | "remove" | "update" | "actuate";
   // The event data. This should be the device data model.
   data: DeviceManagerEventData;
   // Any extra meta-information.
@@ -133,6 +133,13 @@ class IdResolver {
       for (let templateAttr of event.data.attrs[templateId]) {
         if (templateAttr["label"] === "id-location") {
           ret.push(JSON.parse(templateAttr["static_value"]));
+        } else if (templateAttr["label"] === "topic") {
+          let instruction : ResolverInstructions = {
+            type : "mqtt-topic",
+            xid: templateAttr["static_value"],
+            id : templateAttr["static_value"]
+          }
+          ret.push(instruction);
         }
       }
     }
